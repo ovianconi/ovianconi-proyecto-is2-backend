@@ -24,11 +24,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		// String loginPage = "/login";
+		String loginPage = "/login/**";
 
 		http.csrf().disable();
 
-		// http.authorizeRequests().antMatchers(HttpMethod.POST, loginPage).permitAll();
+		http.
+        authorizeRequests()
+        .antMatchers("/").permitAll()
+        .antMatchers(loginPage).permitAll();
 
 		// All requests send to the Web Server request must be authenticated
 		http.authorizeRequests().anyRequest().authenticated();
@@ -66,8 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// If Spring BOOT < 2.x (Spring Security 4.x)):
 		// Spring auto add ROLE_
-		// mngConfig.withUser("tom").password("123").roles("USER");
-		// mngConfig.withUser("jerry").password("123").roles("USER");
+		// mngConfig.withUser("admin").password("pass").roles("USER");
+		// mngConfig.withUser("user").password("pass").roles("USER");
 	}
 
 }
