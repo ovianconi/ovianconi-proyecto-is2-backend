@@ -2,6 +2,7 @@ package com.project.is2.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -45,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers(loginPage).permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/index*", "/static/**", "/*.js", "/*.json", "/*.ico").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().csrf().disable()
@@ -53,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .loginPage(loginPage)
                 .loginPage("/")
-                .loginProcessingUrl("/perform_login")
+                //.loginProcessingUrl("/perform_login")
                 .failureUrl("/login?error=true")
                 .defaultSuccessUrl(homePage)
                 .usernameParameter("username")
