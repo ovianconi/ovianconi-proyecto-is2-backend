@@ -20,6 +20,7 @@ import com.project.is2.entity.User;
 import com.project.is2.repository.PermitRepository;
 import com.project.is2.repository.UserRepository;
 import com.project.is2.service.RoleService;
+import com.project.is2.service.UserService;
 
 @RestController
 public class MainRESTController {
@@ -27,41 +28,35 @@ public class MainRESTController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private UserService userService;
+    @Autowired
     private RoleService roleService;
     @Autowired
     private PermitRepository permitRepository;
- 
-//    @RequestMapping("/")
-//    @ResponseBody
-//    public String welcome() {
-//        return "Bienvenidos";
-//    }
- 
-    // URL:
-    // http://localhost:8080/usuarios
-    // http://localhost:8080/usuarios.xml
-    // http://localhost:8080/usuarios.json
+
     @RequestMapping(value = "/usuarios", //
             method = RequestMethod.GET, //
             produces = { MediaType.APPLICATION_JSON_VALUE, //
                     MediaType.APPLICATION_XML_VALUE })
     @ResponseBody
-    public List<User> getUser() {
+    public List<User> getUsers() {
         List<User> list = userRepository.findAll();
         return list;
     }
- 
-    // URL:
-    // http://localhost:8080/usuario/{id}
-    // http://localhost:8080/usuario/{id}.xml
-    // http://localhost:8080/usuario/{id}.json
-    @RequestMapping(value = "/usuario/{id}", //
-            method = RequestMethod.GET, //
-            produces = { MediaType.APPLICATION_JSON_VALUE, //
-                    MediaType.APPLICATION_XML_VALUE })
+    
+    
+    @RequestMapping(value = "/usuarios",
+            produces = { MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public User getUserById(@PathVariable("id") Long id) {
-        return userRepository.findByUserId(id);
+    public User createUser(@RequestBody User newUser) {
+        return userService.saveUser(newUser);
+    }
+
+    @RequestMapping(value = "/usuario/{id}",
+            produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public User updateUser(@RequestBody User user) {
+        return userService.updateUser(user);
     }
 
 
@@ -88,6 +83,12 @@ public class MainRESTController {
     public Role updateRole(@RequestBody Role role){
         return roleService.updateRole(role);
     }
-
-
+    
+    @RequestMapping(value = "/login/{username}/{password}", //
+            method = RequestMethod.POST, //
+            produces = { MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public User getIsUser(@PathVariable("username") String username, @PathVariable("password") String password) {
+        return userService.isAuthenticated(username, password);
+    } 
 }
