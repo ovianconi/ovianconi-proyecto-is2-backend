@@ -16,23 +16,23 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(value={"/", "/login"})
-    public ModelAndView login(){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
-    }
-
-    @GetMapping(value="/admin/home")
-    public ModelAndView home(){
-        ModelAndView modelAndView = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUserName(auth.getName());
-        modelAndView.addObject("userName", "Bienvenido " + user.getUserName() + "/" + user.getNombre() + " " + user.getApellido() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("adminMessage","Contenido visible solo para administradores");
-        modelAndView.setViewName("admin/home");
-        return modelAndView;
-    }
+//    @GetMapping(value={"/", "/login"})
+//    public ModelAndView login(){
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("login");
+//        return modelAndView;
+//    }
+//
+//    @GetMapping(value="/admin/home")
+//    public ModelAndView home(){
+//        ModelAndView modelAndView = new ModelAndView();
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        User user = userService.findUserByUserName(auth.getName());
+//        modelAndView.addObject("userName", "Bienvenido " + user.getUserName() + "/" + user.getNombre() + " " + user.getApellido() + " (" + user.getEmail() + ")");
+//        modelAndView.addObject("adminMessage","Contenido visible solo para administradores");
+//        modelAndView.setViewName("admin/home");
+//        return modelAndView;
+//    }
 
 
 }

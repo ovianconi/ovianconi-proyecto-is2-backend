@@ -84,11 +84,12 @@ public class MainRESTController {
         return roleService.updateRole(role);
     }
     
-    @RequestMapping(value = "/login/{username}/{password}", //
-            method = RequestMethod.POST, //
+    @RequestMapping(value = "/login/{userName}/{password}", //
+            method = {RequestMethod.POST }, //
             produces = { MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public User getIsUser(@PathVariable("username") String username, @PathVariable("password") String password) {
-        return userService.isAuthenticated(username, password);
+    public User getIsUser(@PathVariable("userName") String userName, @PathVariable("password") String password) {
+        User user = userService.isAuthenticated(userName, password); 
+    	return user;
     } 
 }

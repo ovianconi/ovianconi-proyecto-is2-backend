@@ -59,16 +59,18 @@ public class UserService {
 	
 	public User isAuthenticated(String username, String password) {
 		
-		String encrytedPassword = bCryptPasswordEncoder.encode(password);
 		String sql = "Select e from " + User.class.getName() + " e " //
-                + " Where e.userName = :user and e.encrytedPassword = :pass";
+                + " Where e.userName = :user";
 
         Query query = entityManager.createQuery(sql, User.class);
         query.setParameter("user", username);
-        query.setParameter("pass", encrytedPassword);
 
+        User userFromDB = new User();
         if (!query.getResultList().isEmpty()) {
-            return (User) query.getSingleResult();
+        	userFromDB = (User) query.getSingleResult();
+        	if(bCryptPasswordEncoder.matches(password, userFromDB.getEncrytedPassword())) {
+        		return userFromDB;
+        	}
         }
 		return null;
 	}
