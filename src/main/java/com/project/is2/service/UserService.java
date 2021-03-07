@@ -1,5 +1,7 @@
 package com.project.is2.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -8,26 +10,27 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.is2.dto.UserLoginDTO;
 import com.project.is2.entity.User;
-import com.project.is2.repository.RoleRepository;
 import com.project.is2.repository.UserRepository;
 
 @Service
 public class UserService {
 
 	private UserRepository userRepository;
-	private RoleRepository roleRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
-    private EntityManager entityManager;
-	
+	private EntityManager entityManager;
+
 	@Autowired
-	public UserService(UserRepository userRepository, RoleRepository roleRepository,
-			BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+	}
+
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
 	}
 
 	public User findUserByEmail(String email) {
@@ -50,28 +53,34 @@ public class UserService {
 		userNew.setRoles(user.getRoles());
 		return userRepository.save(userNew);
 	}
-	
+
 	@Transactional
     public User updateUser(User user) {
-        userRepository.save(user);
-        return user;
+		User currentUser = userRepository.findByUserId(user.getUserId());
+
+		if(!user.getEncrytedPassword().equals(currentUser.getEncrytedPassword())) {
+			user.setEncrytedPassword(bCryptPasswordEncoder.encode(user.getEncrytedPassword()));
+		}
+
+        return userRepository.save(user);
     }
-	
-	public User isAuthenticated(String username, String password) {
-		
+
+	public UserLoginDTO isAuthenticated(String username, String password) {
 		String sql = "Select e from " + User.class.getName() + " e " //
-                + " Where e.userName = :user";
+				+ " Where e.userName = :user";
 
-        Query query = entityManager.createQuery(sql, User.class);
-        query.setParameter("user", username);
+		Query query = entityManager.createQuery(sql, User.class);
+		query.setParameter("user", username);
 
-        User userFromDB = new User();
-        if (!query.getResultList().isEmpty()) {
-        	userFromDB = (User) query.getSingleResult();
-        	if(bCryptPasswordEncoder.matches(password, userFromDB.getEncrytedPassword())) {
-        		return userFromDB;
-        	}
-        }
+		if (!query.getResultList().isEmpty()) {
+			User userFromDB = (User) query.getSingleResult();
+			if (password.equals(userFromDB.getEncrytedPassword())
+					|| bCryptPasswordEncoder.matches(password, userFromDB.getEncrytedPassword())) {
+				
+				User user = userRepository.findByUserId(userFromDB.getUserId());
+				return new UserLoginDTO(user);
+			}
+		}
 		return null;
 	}
 }

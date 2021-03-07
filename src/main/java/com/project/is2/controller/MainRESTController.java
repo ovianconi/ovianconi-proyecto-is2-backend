@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.is2.dto.UserLoginDTO;
 import com.project.is2.entity.Permit;
 import com.project.is2.entity.Role;
 import com.project.is2.entity.User;
@@ -40,8 +41,7 @@ public class MainRESTController {
                     MediaType.APPLICATION_XML_VALUE })
     @ResponseBody
     public List<User> getUsers() {
-        List<User> list = userRepository.findAll();
-        return list;
+        return userService.getAllUsers();
     }
     
     
@@ -88,8 +88,7 @@ public class MainRESTController {
             method = {RequestMethod.POST }, //
             produces = { MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public User getIsUser(@PathVariable("userName") String userName, @PathVariable("password") String password) {
-        User user = userService.isAuthenticated(userName, password); 
-    	return user;
+    public UserLoginDTO getIsUser(@PathVariable("userName") String userName, @PathVariable("password") String password) {
+    	return userService.isAuthenticated(userName, password);
     } 
 }
