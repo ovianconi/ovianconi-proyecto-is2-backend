@@ -16,24 +16,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.is2.dto.UserLoginDTO;
 import com.project.is2.entity.Permit;
+import com.project.is2.entity.Proyecto;
 import com.project.is2.entity.Role;
+import com.project.is2.entity.Tarea;
 import com.project.is2.entity.User;
 import com.project.is2.repository.PermitRepository;
-import com.project.is2.repository.UserRepository;
+import com.project.is2.service.ProyectoService;
 import com.project.is2.service.RoleService;
+import com.project.is2.service.TareaService;
 import com.project.is2.service.UserService;
 
 @RestController
 public class MainRESTController {
-     
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private UserService userService;
     @Autowired
     private RoleService roleService;
     @Autowired
     private PermitRepository permitRepository;
+    @Autowired
+    private TareaService tareaService;
+    @Autowired
+    private ProyectoService proyectoService;
 
     @RequestMapping(value = "/usuarios", //
             method = RequestMethod.GET, //
@@ -90,5 +95,41 @@ public class MainRESTController {
     @ResponseBody
     public UserLoginDTO getIsUser(@PathVariable("userName") String userName, @PathVariable("password") String password) {
     	return userService.isAuthenticated(userName, password);
-    } 
+    }
+
+    @GetMapping( value = "/tareas", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Tarea> getTareas() {
+        return tareaService.getAllTarea();
+    }
+
+    @PostMapping(value = "/tareas", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Tarea createTarea(@RequestBody Tarea newTarea) {
+        return tareaService.createTarea(newTarea);
+    }
+    
+    @PutMapping(value = "/tareas/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Tarea updateTarea(@RequestBody Tarea tarea){
+        return tareaService.updateTarea(tarea);
+    }
+    
+    @GetMapping( value = "/proyectos", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Proyecto> getProyectos() {
+        return proyectoService.getAllProyecto();
+    }
+
+    @PostMapping(value = "/proyectos", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Proyecto createProyecto(@RequestBody Proyecto newProyecto) {
+        return proyectoService.createProyecto(newProyecto);
+    }
+    
+    @PutMapping(value = "/proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Proyecto updateProyecto(@RequestBody Proyecto proyecto){
+        return proyectoService.updateProyecto(proyecto);
+    }
 }
