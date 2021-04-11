@@ -8,8 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tarea")
@@ -25,13 +26,17 @@ public class Tarea {
 	@Column(nullable = false, name = "descripcion")
 	private String descripcion;
 	
-	@Column(nullable = false, name = "id_tarea_padre")
+	@Column(name = "id_tarea_padre")
 	private int idTareaPadre;
 
-	@ManyToOne(targetEntity = Tarea.class)
+	@ManyToOne
     @JoinColumn(name = "proyecto_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"tareas"})
     private Proyecto proyecto;
+
+	@Transient
+	@JsonIgnoreProperties({"tareaPadre"})
+	private Tarea tareaPadre;
 
 	public int getId() {
 		return id;
@@ -71,5 +76,13 @@ public class Tarea {
 
 	public void setProyecto(Proyecto proyecto) {
 		this.proyecto = proyecto;
+	}
+
+	public Tarea getTareaPadre() {
+		return tareaPadre;
+	}
+
+	public void setTareaPadre(Tarea tareaPadre) {
+		this.tareaPadre = tareaPadre;
 	}
 }
