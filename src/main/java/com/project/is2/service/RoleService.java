@@ -45,5 +45,9 @@ public class RoleService {
         
         return role;
     }
+    
+    public int countRole(){
+        return getAllRole().size();
+    }
 
 }
