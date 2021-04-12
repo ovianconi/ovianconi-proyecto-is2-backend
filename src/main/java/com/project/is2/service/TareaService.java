@@ -38,4 +38,8 @@ public class TareaService {
 	public void deleteTarea(Integer id) {
 		tareaRepository.deleteById(id);
 	}
+	
+	public int countTarea() {
+		return getAllTarea().size();
+	}
 }

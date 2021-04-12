@@ -1,5 +1,6 @@
 package com.project.is2.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,5 +132,21 @@ public class MainRESTController {
     @ResponseBody
     public Proyecto updateProyecto(@RequestBody Proyecto proyecto){
         return proyectoService.updateProyecto(proyecto);
+    }
+    
+    //TODO 
+    @RequestMapping(value = "/stats", //
+            method = {RequestMethod.POST }, //
+            produces = { MediaType.APPLICATION_JSON_VALUE})
+    public HashMap<String, Integer> getStats(){
+        
+    	HashMap<String, Integer> contador = new HashMap<String, Integer>();
+    	
+    	contador.put("Tareas", tareaService.countTarea());
+    	contador.put("Proyectos", proyectoService.countProject());
+    	contador.put("Usuarios", userService.countUsers());
+    	contador.put("Roles", roleService.countRole());
+    	
+    	return contador;
     }
 }
