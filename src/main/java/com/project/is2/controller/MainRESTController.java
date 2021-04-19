@@ -135,9 +135,7 @@ public class MainRESTController {
     }
     
     //TODO 
-    @RequestMapping(value = "/stats", //
-            method = {RequestMethod.POST }, //
-            produces = { MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/stats", produces = { MediaType.APPLICATION_JSON_VALUE})
     public HashMap<String, Integer> getStats(){
         
     	HashMap<String, Integer> contador = new HashMap<String, Integer>();
