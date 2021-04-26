@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.is2.dto.UserLoginDTO;
+import com.project.is2.entity.LineaBase;
 import com.project.is2.entity.Permit;
 import com.project.is2.entity.Proyecto;
 import com.project.is2.entity.Role;
 import com.project.is2.entity.Tarea;
 import com.project.is2.entity.User;
 import com.project.is2.repository.PermitRepository;
+import com.project.is2.service.LineaBaseService;
 import com.project.is2.service.ProyectoService;
 import com.project.is2.service.RoleService;
 import com.project.is2.service.TareaService;
@@ -40,6 +42,8 @@ public class MainRESTController {
     private TareaService tareaService;
     @Autowired
     private ProyectoService proyectoService;
+    @Autowired
+    private LineaBaseService LineaBaseService;
 
     @RequestMapping(value = "/usuarios", //
             method = RequestMethod.GET, //
@@ -138,13 +142,26 @@ public class MainRESTController {
     @GetMapping(value = "/stats", produces = { MediaType.APPLICATION_JSON_VALUE})
     public HashMap<String, Integer> getStats(){
         
-    	HashMap<String, Integer> contador = new HashMap<String, Integer>();
+    	HashMap<String, Integer> contador = new HashMap<>();
     	
     	contador.put("Tareas", tareaService.countTarea());
     	contador.put("Proyectos", proyectoService.countProject());
     	contador.put("Usuarios", userService.countUsers());
     	contador.put("Roles", roleService.countRole());
+        contador.put("LineasBase", LineaBaseService.countBaseLines());
     	
     	return contador;
+    }
+
+    @PostMapping(value = "/linea-base", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LineaBase createBL(@RequestBody LineaBase newBL) {
+        return LineaBaseService.createBaseLine(newBL);
+    }
+
+    @GetMapping( value = "/linea-base", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<LineaBase> getBLs() {
+        return LineaBaseService.getAllBaseLines();
     }
 }

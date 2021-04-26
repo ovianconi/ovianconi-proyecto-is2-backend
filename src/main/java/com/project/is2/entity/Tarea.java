@@ -34,6 +34,11 @@ public class Tarea {
     @JsonIgnoreProperties({"tareas"})
     private Proyecto proyecto;
 
+	@ManyToOne
+    @JoinColumn(name = "linea_base_id")
+    @JsonIgnoreProperties({"tareas"})
+    private LineaBase lineaBase;
+
 	@Transient
 	@JsonIgnoreProperties({"tareaPadre"})
 	private Tarea tareaPadre;
@@ -84,5 +89,13 @@ public class Tarea {
 
 	public void setTareaPadre(Tarea tareaPadre) {
 		this.tareaPadre = tareaPadre;
+	}
+
+	public LineaBase getLineaBase() {
+		return lineaBase;
+	}
+
+	public void setLineaBase(LineaBase lineaBase) {
+		this.lineaBase = lineaBase;
 	}
 }
